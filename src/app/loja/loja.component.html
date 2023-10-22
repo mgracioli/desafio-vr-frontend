@@ -1,0 +1,7 @@
+<div class="container">
+
+  <div *ngFor="let toast of toasts">
+    <toast [mensagem]='toast.descricao' [tipoToast]="toast.tipoToast" />
+  </div>
+
+</div>

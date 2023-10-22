@@ -1,40 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { TProduto, TRetornoApi } from '../@types/produto.types';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormValidator } from 'src/app/utils/form-validator';
+import { DropdownService } from 'src/app/services/dropdown.service';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Observable, catchError, of } from 'rxjs';
-import { DropdownService } from '../services/dropdown.service';
-import { TToastInfo } from '../components/toast/@Types/toast.types';
-import { FormValidator } from '../utils/form-validator';
-import { TLoja } from '../loja/@types/loja.types';
-import { TProduto } from './@types/produto.types';
-import { Router, ActivatedRoute, NavigationExtras } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { TToastInfo } from 'src/app/components/toast/@Types/toast.types';
+import { TLoja } from 'src/app/loja/@types/loja.types';
+import { ProdutoService } from 'src/app/services/produto.service';
+
 @Component({
-  selector: 'produto',
-  templateUrl: './produto.component.html',
-  styleUrls: ['./produto.component.scss']
+  selector: 'app-cadastro-edicao',
+  templateUrl: './cadastro-edicao.component.html',
+  styleUrls: ['./cadastro-edicao.component.scss']
 })
-export class ProdutoComponent implements OnInit {
-  formulario: FormGroup;
+export class CadastroEdicaoComponent {
   lojas$: Observable<TLoja[]>;
   toasts: Array<TToastInfo>;
+  formulario = this.formBuilder.group({
+    codigo: [''],
+    descricao: [''],
+    custo: [''],
+    // custo: ['', [FormValidator.equalsTo('email')]],
+    imagem: ['']
+  });
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
+    private produtoService: ProdutoService,
     private dropdownService: DropdownService) {
     // super();  //chama o construtor da classe BaseFormComponet
   }
 
   ngOnInit(): void {
-    this.formulario = this.formBuilder.group({
-      codigo: [null],
-      descricao: [null, [Validators.required, Validators.maxLength(60)]],
-      custo: [null, [FormValidator.equalsTo('email')]],
-      precoVenda: [null],
-    });
+    const produto: TRetornoApi = this.route.snapshot.data['produto']
+
+    if (produto.retorno.dados) {
+      const dadosProduto: TProduto = produto.retorno.dados;
+
+      this.formulario.setValue({
+        codigo: dadosProduto.id.toString(),
+        descricao: dadosProduto.descricao,
+        custo: dadosProduto.custo,
+        imagem: null,
+      })
+    }
 
     //formulário reativo para consulta do CEP
     //.statusChanges é um observable que emite um evento sempre que o status dos validators do campo/controle cep forem alterados
@@ -62,7 +76,8 @@ export class ProdutoComponent implements OnInit {
   }
 
   onSubmit() {
-
+    // this.produtoService.gravarProduto(this.formulario.value)
+    console.log('wwhhhhhsubmit', this.formulario.value)
   }
 
   incluirProduto() {
@@ -70,5 +85,9 @@ export class ProdutoComponent implements OnInit {
 
   onEdit(produto: TProduto) {
     this.router.navigate(['editar', produto.id], { relativeTo: this.route })
+  }
+
+  clicou() {
+    console.log('wwcliclou')
   }
 }

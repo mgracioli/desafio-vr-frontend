@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TLoja } from '../produto/@types/produto.types';
+import { TLoja } from '../loja/@types/loja.types';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

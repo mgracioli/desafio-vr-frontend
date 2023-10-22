@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 import { TToastInfo } from '../components/toast/@Types/toast.types';
 import { DropdownService } from '../services/dropdown.service';
-import { TLoja } from '../produto/@types/produto.types';
+import { TLoja } from './@types/loja.types';
 
 @Component({
   selector: 'app-loja',

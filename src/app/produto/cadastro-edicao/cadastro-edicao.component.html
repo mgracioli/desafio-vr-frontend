@@ -1,9 +1,11 @@
 <div class="container-fluid">
   <nav class="navbar navbar-light bg-light">
+    <mat-icon class="grid-item add-icon" type="submit" (click)="clicou()" aria-hidden="false"
+      aria-label="Example home icon" fontIcon="save" />
     <mat-icon class="grid-item add-icon" type="button" (click)="incluirProduto()" aria-hidden="false"
-      aria-label="Example home icon" fontIcon="add_circle_outline" />
+      aria-label="Example home icon" fontIcon="delete" />
     <span class="grid-item page-title">
-      Consulta de Produto
+      Cadastro de Produto
     </span>
   </nav>
 
@@ -43,13 +45,13 @@
             msgErro="Emails não são iguais"></app-campo-control-erro> -->
         </div>
 
-        <div class="col-2">
+        <!-- <div class="col-2">
           <label for="precoVenda">Preço de venda</label>
           <input id="precoVenda" formControlName="precoVenda" class="form-control">
 
-          <!-- <app-campo-control-erro [mostrarErro]="formulario.get('confirmarEmail').hasError('equalsTo')"
-            msgErro="Emails não são iguais"></app-campo-control-erro> -->
-        </div>
+          <app-campo-control-erro [mostrarErro]="formulario.get('confirmarEmail').hasError('equalsTo')"
+            msgErro="Emails não são iguais"></app-campo-control-erro>
+        </div> -->
       </div>
 
 

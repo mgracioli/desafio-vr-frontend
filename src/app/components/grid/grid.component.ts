@@ -7,7 +7,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgIf, DatePipe } from '@angular/common';
-import { TProduto, TRetornoApi } from 'src/app/produto/@types/produto.types';
+import { TProduto, TRetornoApi, TRetornoApiProdLoja } from 'src/app/produto/@types/produto.types';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -31,8 +31,16 @@ export class GridComponent implements AfterViewInit {
 
   constructor(
     private produtoService: ProdutoService,
-    private activatedRoute: ActivatedRoute
+    private route: ActivatedRoute
   ) { }
+
+  ngOnInit() {
+    const prodRetorno: TRetornoApi = this.route.snapshot.data['produtos']
+
+    if (prodRetorno.retorno.dados) {
+      this.produtos = [...prodRetorno.retorno.dados];
+    }
+  }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -57,7 +65,7 @@ export class GridComponent implements AfterViewInit {
           // console.log('wwwdadosssssss', data)
 
           const dados = data.retorno.dados ?? null
-
+          console.log('wwwdata', dados)
           this.isLoadingResults = false;
           this.isRateLimitReached = dados === null;
 

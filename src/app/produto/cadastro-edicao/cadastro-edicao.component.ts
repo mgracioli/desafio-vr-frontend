@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { TProduto, TRetornoApi } from '../@types/produto.types';
+import { Component, signal } from '@angular/core';
+import { TProduto, TProdutoLoja, TRetornoApi, TRetornoApiProdLoja } from '../@types/produto.types';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormValidator } from 'src/app/utils/form-validator';
 import { DropdownService } from 'src/app/services/dropdown.service';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { TToastInfo } from 'src/app/components/toast/@Types/toast.types';
 import { TLoja } from 'src/app/loja/@types/loja.types';
 import { ProdutoService } from 'src/app/services/produto.service';
@@ -16,14 +16,15 @@ import { ProdutoService } from 'src/app/services/produto.service';
   styleUrls: ['./cadastro-edicao.component.scss']
 })
 export class CadastroEdicaoComponent {
+  // arrayProdutos: TProdutoLoja[] = []
   lojas$: Observable<TLoja[]>;
   toasts: Array<TToastInfo>;
+
   formulario = this.formBuilder.group({
-    codigo: [''],
-    descricao: [''],
-    custo: [''],
+    codigo: '',
+    descricao: '',
+    custo: ''
     // custo: ['', [FormValidator.equalsTo('email')]],
-    imagem: ['']
   });
 
   constructor(
@@ -37,17 +38,19 @@ export class CadastroEdicaoComponent {
   }
 
   ngOnInit(): void {
-    const produto: TRetornoApi = this.route.snapshot.data['produto']
+    const produto: TRetornoApiProdLoja = this.route.snapshot.data['produtosLoja']
 
     if (produto.retorno.dados) {
-      const dadosProduto: TProduto = produto.retorno.dados;
+      const arrayProdutos: TProdutoLoja[] = [...produto.retorno.dados];
 
       this.formulario.setValue({
-        codigo: dadosProduto.id.toString(),
-        descricao: dadosProduto.descricao,
-        custo: dadosProduto.custo,
-        imagem: null,
+        codigo: arrayProdutos[0].id_produto.toString(),
+        descricao: arrayProdutos[0].prod_desc,
+        custo: arrayProdutos[0].prod_custo,
       })
+      console.log('wwwaqui')
+
+      this.produtoService.atualizaDados(produto.retorno.dados)
     }
 
     //formulário reativo para consulta do CEP
@@ -75,12 +78,25 @@ export class CadastroEdicaoComponent {
     //   .subscribe(cidades => this.cidades = cidades); //o subscribe se inscreve no observable valueChanges que, por sua vez, detecta a alteração de valor na combobox endereco.estado
   }
 
-  onSubmit() {
-    // this.produtoService.gravarProduto(this.formulario.value)
-    console.log('wwhhhhhsubmit', this.formulario.value)
+  ngOnChange() {
+
   }
 
-  incluirProduto() {
+  // onSubmit() {
+  //   console.log('wwhhhhhsubmit', this.formulario.value)
+  // }
+
+  excluirProduto() {
+    this.produtoService.excluirProduto(this.formulario.value.codigo ? parseInt(this.formulario.value.codigo) : null)
+      .subscribe(data => {
+        if (data.retorno.codigo_status === 200) {
+          this.resetData();
+          console.log('wwwcerto', data)
+        } else {
+          console.log('wwerrroo', data)
+          //tast de erro
+        }
+      })
   }
 
   onEdit(produto: TProduto) {
@@ -89,5 +105,30 @@ export class CadastroEdicaoComponent {
 
   clicou() {
     console.log('wwcliclou')
+    // this.produtoService.resetForm()
+
+    // this.arrayProdutos.subscribe(data => {
+    //   console.log('wwwdddddddddddd', data)
+    //   return [{
+    //     id: 0,
+    //     id_produto: 0,
+    //     id_loja: 0,
+    //     preco_venda: '',
+    //     prod_desc: '',
+    //     prod_custo: '',
+    //     prod_imagem: '',
+    //     loja_desc: ''
+    //   }]
+    // })
+    // this.arrayProdutos.next([])
+  }
+
+  resetData() {
+    this.formulario.reset();
+    this.produtoService.atualizaDados([])
+  }
+
+  onSubmit() {
+    console.log('wwwsubmeteu')
   }
 }

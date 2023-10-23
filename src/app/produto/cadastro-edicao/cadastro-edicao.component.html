@@ -2,7 +2,7 @@
   <nav class="navbar navbar-light bg-light">
     <mat-icon class="grid-item add-icon" type="submit" (click)="clicou()" aria-hidden="false"
       aria-label="Example home icon" fontIcon="save" />
-    <mat-icon class="grid-item add-icon" type="button" (click)="incluirProduto()" aria-hidden="false"
+    <mat-icon class="grid-item add-icon" type="button" (click)="excluirProduto()" aria-hidden="false"
       aria-label="Example home icon" fontIcon="delete" />
     <span class="grid-item page-title">
       Cadastro de Produto
@@ -62,6 +62,6 @@
   </div>
 
   <div class="container-central">
-    <grid (editar)="onEdit($event)" />
+    <gridProdutoLoja (editar)="onEdit($event)" />
   </div>
 </div>

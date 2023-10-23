@@ -20,7 +20,6 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     MatTableModule,
     MatProgressSpinnerModule,
-    MatTableModule,
     MatSortModule,
     MatPaginatorModule
   ],

@@ -13,6 +13,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { CadastroEdicaoComponent } from './produto/cadastro-edicao/cadastro-edicao.component';
 import { ProdutoService } from './services/produto.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { GridLojaComponent } from './produto/cadastro-edicao/grid/grid-produto-loja.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,6 +25,7 @@ import { ProdutoService } from './services/produto.service';
     PaginaNaoEncontradaComponent,
     LojaComponent,
     CadastroEdicaoComponent,
+    GridLojaComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +34,12 @@ import { ProdutoService } from './services/produto.service';
     ComponentsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatIconModule
+    MatIconModule,
+    MatIconModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatPaginatorModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

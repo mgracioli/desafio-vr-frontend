@@ -4,5 +4,5 @@ import { TProduto } from "../@types/produto.types";
 import { ProdutoService } from "src/app/services/produto.service";
 
 export const ProdutoResolver: ResolveFn<TProduto[]> = (route: ActivatedRouteSnapshot) => {
-    return inject(ProdutoService).buscarProdutoPorId(route.paramMap.get('id'));
+    return inject(ProdutoService).buscarProduto(route.paramMap.get('id'));
 }

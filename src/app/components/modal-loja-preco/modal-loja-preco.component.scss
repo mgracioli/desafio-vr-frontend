@@ -1,0 +1,46 @@
+.container-modal {
+  min-width: 600px;
+  max-width: 800px;
+  height: 40vh;
+  background-color: #ffff;
+  border: 2px solid #1d1d1d
+}
+
+.cabecalho {
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 2px solid #1d1d1d
+}
+
+.grid-item {
+  margin: auto
+}
+
+.page-title {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.icone-cabecalho {
+  font-size: 1.7rem
+}
+
+.container-conteudo {
+  padding: 30px;
+  display: flex;
+  justify-content: space-around;
+
+  .container-item {
+    display: flex;
+    flex-direction: column
+  }
+
+  .item-loja {
+    width: 65%;
+  }
+
+  .item-venda {
+    width: 30%
+  }
+}

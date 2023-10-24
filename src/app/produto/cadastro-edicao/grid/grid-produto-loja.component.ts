@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild, AfterViewInit, Output, EventEmitter, signal, Input, SimpleChanges } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, Output, EventEmitter, signal, Input, SimpleChanges, effect } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
 import { merge, Observable, of as observableOf, of, Subject } from 'rxjs';
@@ -7,9 +7,11 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgIf, DatePipe } from '@angular/common';
-import { TProduto, TProdutoLoja, TRetornoApi, TRetornoApiProdLoja } from 'src/app/produto/@types/produto.types';
+import { TProduto, TProdutoLoja, TRetornoApiProdLoja } from 'src/app/produto/@types/produto.types';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalLojaPrecoComponent } from 'src/app/components/modal-loja-preco/modal-loja-preco.component';
 
 @Component({
   selector: 'gridProdutoLoja',
@@ -20,7 +22,7 @@ export class GridLojaComponent {
   @Input() resetForm: boolean;
   @Output() editar = new EventEmitter();
 
-  produtos: TProdutoLoja[] = []
+  arrayProdutos: TProdutoLoja[] = []
 
   displayedColumns: string[] = ['loja', 'precoVenda', 'acoes'];
   resultsLength = 0;
@@ -32,20 +34,16 @@ export class GridLojaComponent {
 
   constructor(
     private produtoService: ProdutoService,
-    private route: ActivatedRoute
+    public dialog: MatDialog
   ) {
-    this.produtoService.listen2().subscribe(data => {
-      this.produtos = data
 
-      if (data.length == 0) {
-        this.isLoadingResults = false;
-        this.isRateLimitReached = true;
-      }
+    effect(() => {
+      this.arrayProdutos = produtoService.arrayProdutos();
     })
   }
 
   ngAfterViewInit() {
-    if (this.produtos.length > 0) {
+    if (this.arrayProdutos.length > 0) {
       this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
       merge(this.sort.sortChange, this.paginator.page)
@@ -60,8 +58,8 @@ export class GridLojaComponent {
             //   this.paginator.pageIndex,
             // ).pipe(catchError(() => observableOf(null)));
 
-            if (this.produtos.length > 0) {
-              return this.produtoService.buscarProdutoVenda(this.produtos[0].id_produto)
+            if (this.arrayProdutos.length > 0) {
+              return this.produtoService.buscarProdutoVenda(this.arrayProdutos[0].id_produto)
                 .pipe(catchError(() => observableOf(null)));
             } else {
               return []
@@ -82,7 +80,7 @@ export class GridLojaComponent {
             return dados;
           })
         )
-        .subscribe(data => (this.produtos = data));
+        .subscribe(data => (this.arrayProdutos = data));
     } else {
       //erro aquiii
       this.isLoadingResults = false;
@@ -102,5 +100,9 @@ export class GridLojaComponent {
         console.log('Erro ao excluir produto', data)
       }
     })
+  }
+
+  adicionarLoja() {
+    this.dialog.open(ModalLojaPrecoComponent)
   }
 }

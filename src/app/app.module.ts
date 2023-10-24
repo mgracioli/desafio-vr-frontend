@@ -7,7 +7,6 @@ import { ProdutoComponent } from './produto/produto.component';
 import { PaginaNaoEncontradaComponent } from './pagina-nao-encontrada/pagina-nao-encontrada.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from './components/components.module';
-import { LojaComponent } from './loja/loja.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,12 +17,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { GridLojaComponent } from './produto/cadastro-edicao/grid/grid-produto-loja.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DropdownComponent } from './components/dropdown/dropdown.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     ProdutoComponent,
     PaginaNaoEncontradaComponent,
-    LojaComponent,
     CadastroEdicaoComponent,
     GridLojaComponent
   ],
@@ -40,6 +41,7 @@ import { GridLojaComponent } from './produto/cadastro-edicao/grid/grid-produto-l
     MatProgressSpinnerModule,
     MatSortModule,
     MatPaginatorModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

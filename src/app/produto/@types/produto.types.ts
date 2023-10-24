@@ -1,5 +1,3 @@
-import { TLoja } from "src/app/loja/@types/loja.types"
-
 export type TProduto = {
   id: number,
   descricao: string,
@@ -7,7 +5,7 @@ export type TProduto = {
   imagem: string,
 }
 
-export type TRetornoApi = {
+export type TRetornoApiProduto = {
   retorno: {
     status: string,
     codigo_status: number,

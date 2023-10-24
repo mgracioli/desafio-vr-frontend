@@ -13,12 +13,12 @@ const routes: Routes = [
     resolve: { produtos: ProdutosResolver }
   },
   {
-    path: 'cadastrar',
+    path: 'cadastro',
     component: CadastroEdicaoComponent,
     resolve: { produtosLoja: ProdutoResolver }
   },
   {
-    path: 'editar/:id',
+    path: 'cadastro/:id',
     component: CadastroEdicaoComponent,
     resolve: { produtosLoja: ProdutoResolver }
   },

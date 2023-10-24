@@ -7,11 +7,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
-
+import { ModalLojaPrecoComponent } from './modal-loja-preco/modal-loja-preco.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms'
+import { DropdownComponent } from './dropdown/dropdown.component';
 @NgModule({
   declarations: [
     ToastComponent,
-    GridComponent
+    GridComponent,
+    ModalLojaPrecoComponent,
+    DropdownComponent
   ],
   imports: [
     DatePipe,
@@ -21,11 +27,15 @@ import { MatIconModule } from '@angular/material/icon';
     MatTableModule,
     MatProgressSpinnerModule,
     MatSortModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    FormsModule
   ],
   exports: [
     ToastComponent,
-    GridComponent
+    GridComponent,
+    DropdownComponent
   ]
 })
 export class ComponentsModule { }

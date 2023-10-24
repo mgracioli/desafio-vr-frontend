@@ -6,37 +6,44 @@
     </div>
   </div>
 
-  <div class="example-table-container">
-    <table mat-table [dataSource]="produtos" class="example-table" matSort matSortActive="codigo" matSortDisableClear
-      matSortDirection="desc">
-      <ng-container matColumnDef="loja">
-        <th mat-header-cell *matHeaderCellDef>Loja</th>
-        <td mat-cell *matCellDef="let produto">{{produto.loja_desc}}</td>
-      </ng-container>
+  <div class="container-icone-tabela">
+    <mat-icon class="icone-add-loja" type="button" (click)="adicionarLoja()" aria-hidden="false"
+      aria-label="Example home icon" fontIcon="add_circle_outline" />
 
-      <ng-container matColumnDef="precoVenda">
-        <th mat-header-cell *matHeaderCellDef>Preço de venda</th>
-        <td mat-cell *matCellDef="let produto">{{produto.preco_venda}}</td>
-      </ng-container>
+    <div class="example-table-container">
+      <table mat-table [dataSource]="arrayProdutos" class="example-table" matSort matSortActive="codigo"
+        matSortDisableClear matSortDirection="desc">
 
-      <ng-container matColumnDef="acoes">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center">
-          Ações
-        </th>
-        <td mat-cell *matCellDef="let produto" class="text-center">
-          <div class="d-flex align-items-center justify-content-end">
-            <mat-icon type="button" (click)="excluir(produto.id_produto)" aria-hidden="false"
-              aria-label="Example home icon" fontIcon="delete" />
+        <ng-container matColumnDef="loja">
+          <th mat-header-cell *matHeaderCellDef>Loja</th>
+          <td mat-cell *matCellDef="let produto">{{produto.loja_desc}}</td>
+        </ng-container>
 
-            <mat-icon type="button" (click)="onEdit(produto)" aria-hidden="false" aria-label="Example home icon"
-              fontIcon="edit" />
-          </div>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="precoVenda">
+          <th mat-header-cell *matHeaderCellDef>Preço de venda</th>
+          <td mat-cell *matCellDef="let produto">{{produto.preco_venda}}</td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let produto; columns: displayedColumns;"></tr>
-    </table>
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center">
+            Ações
+          </th>
+          <td mat-cell *matCellDef="let produto" class="text-center">
+            <div class="d-flex align-items-center justify-content-end">
+              <mat-icon type="button" (click)="excluir(produto.id_produto)" aria-hidden="false"
+                aria-label="Example home icon" fontIcon="delete" />
+
+              <mat-icon type="button" (click)="onEdit(produto)" aria-hidden="false" aria-label="Example home icon"
+                fontIcon="edit" />
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let produto; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
   </div>
 
   <mat-paginator [length]="resultsLength" [pageSize]="30" />

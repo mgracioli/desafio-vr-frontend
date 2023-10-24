@@ -37,6 +37,38 @@ table {
   max-width: 64px;
 }
 
-.mat-column-created {
-  max-width: 124px;
+td,
+th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.container-icone-tabela {
+  position: relative
+}
+
+.icone-add-loja {
+  position: absolute;
+  color: #d9d9d9;
+  z-index: 10;
+  font-size: 1.5rem;
+  top: 15px;
+  left: 10px
+}
+
+.mat-icon {
+  width: 30px;
+  height: 30px
+}
+
+.mat-column-loja {
+  width: 60%
+}
+
+.mat-column-precoVenda {
+  width: 30%
+}
+
+.mat-column-acoes {
+  width: 10%
 }

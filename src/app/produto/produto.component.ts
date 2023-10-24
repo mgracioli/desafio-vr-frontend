@@ -3,12 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Observable, catchError, of } from 'rxjs';
-import { DropdownService } from '../services/dropdown.service';
 import { TToastInfo } from '../components/toast/@Types/toast.types';
 import { FormValidator } from '../utils/form-validator';
-import { TLoja } from '../loja/@types/loja.types';
 import { TProduto } from './@types/produto.types';
-import { Router, ActivatedRoute, NavigationExtras } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
+import { TLoja } from './@types/loja.types';
 @Component({
   selector: 'produto',
   templateUrl: './produto.component.html',
@@ -23,8 +22,7 @@ export class ProdutoComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private dropdownService: DropdownService) {
+    private http: HttpClient) {
     // super();  //chama o construtor da classe BaseFormComponet
   }
 
@@ -66,9 +64,10 @@ export class ProdutoComponent implements OnInit {
   }
 
   incluirProduto() {
+    this.router.navigate(['cadastro'], { relativeTo: this.route })
   }
 
   onEdit(produto: TProduto) {
-    this.router.navigate(['editar', produto.id], { relativeTo: this.route })
+    this.router.navigate(['cadastro', produto.id], { relativeTo: this.route })
   }
 }

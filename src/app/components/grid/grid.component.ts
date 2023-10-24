@@ -81,11 +81,11 @@ export class GridComponent implements AfterViewInit {
       .subscribe(data => (this.produtos = data));
   }
 
-  onEdit(produto: TProduto) {
+  editarProdutoLoja(produto: TProduto) {
     this.editar.emit(produto)
   }
 
-  excluir(rowId: number) {
+  excluirProdutoLoja(rowId: number) {
     this.produtoService.excluirProduto(rowId).subscribe(data => {
       if (data.retorno.codigo_status === 200) {
         console.log('produto excluído com sucesso')

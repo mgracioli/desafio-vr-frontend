@@ -27,7 +27,6 @@ export type TRetornoApiErro = {
 
 export type TProdutoLoja = {
   id: number,
-  id_produto: number,
   id_loja: number,
   preco_venda: string,
   prod_desc: string,

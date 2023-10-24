@@ -44,7 +44,7 @@ export class CadastroEdicaoComponent {
       const arrayProdutos: TProdutoLoja[] = [...produto.retorno.dados];
 
       this.formulario.setValue({
-        codigo: arrayProdutos[0].id_produto.toString(),
+        codigo: arrayProdutos[0].id.toString(),
         descricao: arrayProdutos[0].prod_desc,
         custo: arrayProdutos[0].prod_custo,
       })

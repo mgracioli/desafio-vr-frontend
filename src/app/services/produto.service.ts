@@ -38,7 +38,7 @@ export class ProdutoService {
 
   buscarProduto(id: string | null): Observable<TRetornoApiProdLoja | TRetornoApiProduto | TRetornoApiErro> {
     if (id) {
-      return this.http.get<TRetornoApiProdLoja | TRetornoApiErro>(`/api/v1/produtoloja/${id}`).pipe(
+      return this.http.get<TRetornoApiProdLoja | TRetornoApiErro>(`/api/v1/produto/${id}?loja=true`).pipe(
         catchError(erro => {
           const objErro = {
             ...this.retornoApiErro,
@@ -67,9 +67,9 @@ export class ProdutoService {
     }
   }
 
-  excluirProduto(id: number | null): Observable<TRetornoApiProduto | TRetornoApiErro> {
+  excluirProduto(id: number | null, idLoja: number | null = null): Observable<TRetornoApiProduto | TRetornoApiErro> {
     if (id) {
-      return this.http.delete<any>(`/api/v1/produto/${id}`).pipe(
+      return this.http.delete<any>(`/api/v1/produto?id_produto=${id}&id_loja=${idLoja}`).pipe(
         catchError((erro) => {
           const objErro = {
             ...this.retornoApiErro,
@@ -116,13 +116,13 @@ export class ProdutoService {
     }
   }
 
-  buscarProdutoVenda(id: number): any {
-    return this.http.get<any>(`/api/v1/produtoloja/${id}`).pipe(
-      catchError(() => {
-        return of(this.retornoApiErro)
-      })
-    );
-  }
+  // buscarProdutoVenda(id: number): any {
+  //   return this.http.get<any>(`/api/v1/produtoloja/${id}`).pipe(
+  //     catchError(() => {
+  //       return of(this.retornoApiErro)
+  //     })
+  //   );
+  // }
 
   arrayProdutos = signal<TProdutoLoja[]>([])
   atualizaArrayProdutos(novoArray: TProdutoLoja[]) {

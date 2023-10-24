@@ -30,11 +30,11 @@
         </th>
         <td mat-cell *matCellDef="let produto" class="text-center">
           <div class="d-flex align-items-center justify-content-end">
-            <mat-icon type="button" (click)="excluir(produto.id)" aria-hidden="false" aria-label="Example home icon"
-              fontIcon="delete" />
+            <mat-icon type="button" (click)="excluirProdutoLoja(produto.id)" aria-hidden="false"
+              aria-label="Example home icon" fontIcon="delete" />
 
-            <mat-icon type="button" (click)="onEdit(produto)" aria-hidden="false" aria-label="Example home icon"
-              fontIcon="edit" />
+            <mat-icon type="button" (click)="editarProdutoLoja(produto)" aria-hidden="false"
+              aria-label="Example home icon" fontIcon="edit" />
           </div>
         </td>
       </ng-container>

@@ -36,9 +36,14 @@ export class GridLojaComponent {
     private produtoService: ProdutoService,
     public dialog: MatDialog
   ) {
-
     effect(() => {
-      this.arrayProdutos = produtoService.arrayProdutos();
+      const produtos = produtoService.arrayProdutos()
+
+      if (produtos?.[0]?.loja_desc && produtos[0].loja_desc !== null) {
+        this.arrayProdutos = produtoService.arrayProdutos();
+      } else {
+        this.arrayProdutos = [];
+      }
     })
   }
 
@@ -59,7 +64,7 @@ export class GridLojaComponent {
             // ).pipe(catchError(() => observableOf(null)));
 
             if (this.arrayProdutos.length > 0) {
-              return this.produtoService.buscarProdutoVenda(this.arrayProdutos[0].id_produto)
+              return this.produtoService.buscarProduto(`${this.arrayProdutos[0].id}`)
                 .pipe(catchError(() => observableOf(null)));
             } else {
               return []
@@ -80,7 +85,7 @@ export class GridLojaComponent {
             return dados;
           })
         )
-        .subscribe(data => (this.arrayProdutos = data));
+        .subscribe(data => { (this.arrayProdutos = data) });
     } else {
       //erro aquiii
       this.isLoadingResults = false;
@@ -88,16 +93,19 @@ export class GridLojaComponent {
     }
   }
 
-  onEdit(produto: TProduto) {
+  editarProdutoLoja(produto: TProduto) {
     this.editar.emit(produto)
   }
 
-  excluir(rowId: number) {
-    this.produtoService.excluirProduto(rowId).subscribe(data => {
+  //passar id  da loja a ser excluido
+  excluirProdutoLoja(id_produto: number, id_loja: number) {
+    this.produtoService.excluirProduto(id_produto, id_loja).subscribe(data => {
       if (data.retorno.codigo_status === 200) {
-        console.log('produto excluído com sucesso',)
+        const arrayProdExcluido = this.arrayProdutos.filter(prodAnt => prodAnt.id_loja !== id_loja)
+
+        this.produtoService.atualizaArrayProdutos(arrayProdExcluido)
       } else {
-        console.log('Erro ao excluir produto', data)
+        console.log('wwErro ao excluir produto', data)
       }
     })
   }

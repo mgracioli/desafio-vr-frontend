@@ -11,14 +11,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { CadastroEdicaoComponent } from './produto/cadastro-edicao/cadastro-edicao.component';
-import { ProdutoService } from './services/produto.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { GridLojaComponent } from './produto/cadastro-edicao/grid/grid-produto-loja.component';
+import { GridLojaComponent } from './produto/cadastro-edicao/grid-edicao/grid-produto-loja.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { GridProdutoLojaCadastroComponent } from './produto/cadastro-edicao/grid-cadastro/grid-produto-loja-cadastro.component';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { Utils } from './utils/sistema.utils';
 
 @NgModule({
   declarations: [
@@ -26,13 +27,13 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     ProdutoComponent,
     PaginaNaoEncontradaComponent,
     CadastroEdicaoComponent,
-    GridLojaComponent
+    GridLojaComponent,
+    GridProdutoLojaCadastroComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ComponentsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatIconModule,
@@ -42,8 +43,12 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
     MatSortModule,
     MatPaginatorModule,
     MatDialogModule,
+    ComponentsModule
   ],
-  providers: [],
+  providers: [
+    Utils,
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4500, panelClass: ['snackbarstyle'] } }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

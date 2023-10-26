@@ -1,6 +1,6 @@
 <div class="container-modal">
   <div class="cabecalho">
-    <mat-icon class="icone-cabecalho" type="button" (click)="salvarPrecoLoja()" aria-hidden="false"
+    <mat-icon class="icone-cabecalho" type="button" (click)="salvarPrecoELoja()" aria-hidden="false"
       aria-label="Example home icon" fontIcon="save" />
 
     <span class="grid-item page-title">
@@ -13,12 +13,12 @@
   <div class="container-conteudo" mat-dialog-content>
     <div class="container-item item-loja">
       <label>Loja *</label>
-      <dropdown [options]="options" />
+      <dropdown [options]="options" (editarObjetoProduto)="trocarLoja($event)" />
     </div>
 
     <div class="container-item item-venda">
       <label>Preço de venda (R$)*</label>
-      <input>
+      <input [(ngModel)]="precoVenda">
     </div>
   </div>
 </div>

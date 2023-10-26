@@ -12,6 +12,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms'
 import { DropdownComponent } from './dropdown/dropdown.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 @NgModule({
   declarations: [
     ToastComponent,
@@ -30,12 +32,13 @@ import { DropdownComponent } from './dropdown/dropdown.component';
     MatPaginatorModule,
     MatSelectModule,
     MatFormFieldModule,
-    FormsModule
+    FormsModule,
+    MatSnackBarModule
   ],
   exports: [
     ToastComponent,
     GridComponent,
-    DropdownComponent
+    DropdownComponent,
   ]
 })
 export class ComponentsModule { }

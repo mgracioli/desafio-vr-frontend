@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, signal } from "@angular/core";
-import { TProduto, TProdutoLoja, TRetornoApiProduto, TRetornoApiErro, TRetornoApiProdLoja } from "../produto/@types/produto.types";
+import { TProdutoLoja, TRetornoApiProduto, TRetornoApiErro, TRetornoApiProdLoja, TObjCadastro } from "../produto/@types/produto.types";
 import { environment } from "src/environments/environment";
 import { Observable, catchError, of, Subject } from "rxjs";
 
@@ -51,7 +51,6 @@ export class ProdutoService {
         })
       );
     } else {
-      console.log('wwwaqui')
       return this.http.get<TRetornoApiProduto | TRetornoApiErro>(`/api/v1/produto/${id}`).pipe(
         catchError(erro => {
           const objErro = {
@@ -86,9 +85,9 @@ export class ProdutoService {
     }
   }
 
-  gravarProduto(produto: Partial<TProduto>): any {
+  gravarProduto(produto: Partial<TObjCadastro>): Observable<any> {
     if (produto.id) {
-      return this.http.post<TProduto>(`/api/v1/produto/editar/${produto.id}`, produto).pipe(
+      return this.http.put<TObjCadastro>('/api/v1/produto', produto).pipe(
         catchError((erro) => {
           const objErro = {
             ...this.retornoApiErro,
@@ -101,7 +100,7 @@ export class ProdutoService {
         })
       );
     } else {
-      return this.http.put<any>('/api/v1/produto', produto).pipe(
+      return this.http.post<TObjCadastro>('/api/v1/produto', produto).pipe(
         catchError((erro) => {
           const objErro = {
             ...this.retornoApiErro,
@@ -116,16 +115,13 @@ export class ProdutoService {
     }
   }
 
-  // buscarProdutoVenda(id: number): any {
-  //   return this.http.get<any>(`/api/v1/produtoloja/${id}`).pipe(
-  //     catchError(() => {
-  //       return of(this.retornoApiErro)
-  //     })
-  //   );
-  // }
-
-  arrayProdutos = signal<TProdutoLoja[]>([])
+  arrayProdutos = signal<TProdutoLoja[]>([] as TProdutoLoja[])
   atualizaArrayProdutos(novoArray: TProdutoLoja[]) {
     this.arrayProdutos.set(novoArray)
+  }
+
+  objProduto = signal<TProdutoLoja>({} as TProdutoLoja)
+  atualizaObjProduto(novoObj: TProdutoLoja) {
+    this.objProduto.set(novoObj)
   }
 }

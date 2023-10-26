@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Observable, catchError, of } from 'rxjs';
-import { TToastInfo } from '../components/toast/@Types/toast.types';
 import { FormValidator } from '../utils/form-validator';
 import { TProduto } from './@types/produto.types';
 import { Router, ActivatedRoute } from '@angular/router'
@@ -16,7 +15,6 @@ import { TLoja } from './@types/loja.types';
 export class ProdutoComponent implements OnInit {
   formulario: FormGroup;
   lojas$: Observable<TLoja[]>;
-  toasts: Array<TToastInfo>;
 
   constructor(
     private formBuilder: FormBuilder,

@@ -12,6 +12,7 @@ import { ProdutoService } from 'src/app/services/produto.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalLojaPrecoComponent } from 'src/app/components/modal-loja-preco/modal-loja-preco.component';
+import { TLoja } from '../../@types/loja.types';
 
 @Component({
   selector: 'gridProdutoLoja',
@@ -93,24 +94,31 @@ export class GridLojaComponent {
     }
   }
 
-  editarProdutoLoja(produto: TProduto) {
-    this.editar.emit(produto)
+  editarProdutoLoja(loja: TProdutoLoja) {
+    let dialogRef = this.dialog.open(ModalLojaPrecoComponent)
+    dialogRef.componentInstance.registroEdicaoLoja.idLoja = loja.id_loja
+    dialogRef.componentInstance.registroEdicaoLoja.descricao = loja.loja_desc
   }
 
-  //passar id  da loja a ser excluido
-  excluirProdutoLoja(id_produto: number, id_loja: number) {
-    this.produtoService.excluirProduto(id_produto, id_loja).subscribe(data => {
-      if (data.retorno.codigo_status === 200) {
-        const arrayProdExcluido = this.arrayProdutos.filter(prodAnt => prodAnt.id_loja !== id_loja)
+  excluirProdutoLoja(id_produto: number, id_loja: string) {
+    const arrayProdExcluido = this.arrayProdutos.filter(prodAnt => prodAnt.id_loja !== id_loja)
+    this.produtoService.atualizaArrayProdutos(arrayProdExcluido)
 
-        this.produtoService.atualizaArrayProdutos(arrayProdExcluido)
-      } else {
-        console.log('wwErro ao excluir produto', data)
-      }
-    })
+    // this.produtoService.excluirProduto(id_produto, id_loja).subscribe(data => {
+    //   if (data.retorno.codigo_status === 200) {
+    //     const arrayProdExcluido = this.arrayProdutos.filter(prodAnt => prodAnt.id_loja !== id_loja)
+
+    //     this.produtoService.atualizaArrayProdutos(arrayProdExcluido)
+    //   } else {
+    //     //erro ao excluir (pode nao ter achado o produto)
+    //     console.log('wwErro ao excluir produto', data)
+    //   }
+    // })
   }
 
   adicionarLoja() {
-    this.dialog.open(ModalLojaPrecoComponent)
+    let dialogRef = this.dialog.open(ModalLojaPrecoComponent)
+    dialogRef.componentInstance.registroEdicaoLoja.idLoja = null
+    dialogRef.componentInstance.registroEdicaoLoja.descricao = ''
   }
 }

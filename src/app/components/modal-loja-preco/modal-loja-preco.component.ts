@@ -81,24 +81,20 @@ export class ModalLojaPrecoComponent implements OnInit {
 
   salvarPrecoELojaCadastroGrid(arrayProdutos: TProdutoLoja[]) {
     const lojaExistente = arrayProdutos.find(prodLoja => prodLoja.id_loja == this.idLojaDropDown)
-
     if (lojaExistente) {
       this.toast.open('Não é permitido mais que um preço de venda para a mesma loja.');
     } else {
-      if (arrayProdutos[0].id_loja === null) {
-        arrayProdutos = [{
-          ...arrayProdutos[0],
-          id_loja: this.idLojaDropDown,
-          loja_desc: this.nomeLojaDropDown,
-          preco_venda: this.precoVenda
-        }]
+      const objprodutoLoja = {
+        ...arrayProdutos[0],
+        id_loja: this.idLojaDropDown,
+        loja_desc: this.nomeLojaDropDown,
+        preco_venda: this.precoVenda
+      }
+
+      if (arrayProdutos.length && arrayProdutos[0].id_loja === null) {
+        arrayProdutos = [objprodutoLoja]
       } else {
-        arrayProdutos.push({
-          ...arrayProdutos[0],
-          id_loja: this.idLojaDropDown,
-          loja_desc: this.nomeLojaDropDown,
-          preco_venda: this.precoVenda
-        })
+        arrayProdutos.push(objprodutoLoja)
       }
 
       this.finalizarCadastroEdicaoPrecoELoja(arrayProdutos)

@@ -1,0 +1,43 @@
+<div class="container-fluid">
+  <nav class="navbar navbar-light bg-light">
+    <mat-icon class="grid-item add-icon" type="button" (click)="cadastrarProdutoLoja()" aria-hidden="false"
+      aria-label="Example home icon" fontIcon="save" />
+
+    <mat-icon class="grid-item add-icon" type="button" (click)="excluirProduto()" aria-hidden="false"
+      aria-label="Example home icon" fontIcon="delete" />
+
+    <span class="grid-item page-title">
+      Cadastro de Produto
+    </span>
+  </nav>
+
+  <div class="container-central">
+    <form class="form-horizontal" [formGroup]="formulario">
+      <div class="form-group row">
+        <div class="col-2">
+          <label for="id">Código</label>
+          <input id="id" formControlName="id" class="form-control">
+        </div>
+
+        <div class="col-4">
+          <label for="descricao" class="control-label">Descrição *</label>
+          <input [ngClass]="{erro: verificaValidTouched('descricao')}" id="descricao" type="text" class="form-control"
+            formControlName="descricao">
+
+          <campo-erro [control]="formulario.get('descricao')" mensagem="Descrição" />
+        </div>
+
+        <div class="col-2">
+          <label for="custo">Custo</label>
+          <input id="custo" formControlName="custo" class="form-control">
+          <!-- <input [value]="formulario.get('custo')?.value | number:'13.3-3':'pt-BR'" id="custo" formControlName="custo"
+            class="form-control">   -->
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="container-central">
+    <grid-cadastro-edicao-produto />
+  </div>
+</div>

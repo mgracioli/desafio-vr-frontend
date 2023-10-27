@@ -5,25 +5,19 @@ export type TProduto = {
   imagem: string,
 }
 
-export type TRetornoApiProduto = {
+type TMensagem = {
+  codigo: string,
+  descricao: string
+}
+
+export type TRetornoApi<T> = {
   retorno: {
     status: string,
     codigo_status: number,
-    dados: TProduto[] | null
+    dados?: T,
+    mensagens?: TMensagem[]
   }
 }
-
-export type TRetornoApiErro = {
-  retorno: {
-    status: string,
-    codigo_status: number,
-    mensagens: [{
-      codigo: string,
-      descricao: string
-    }]
-  }
-}
-
 
 export type TProdutoLoja = {
   id: string,
@@ -33,16 +27,6 @@ export type TProdutoLoja = {
   prod_custo: string,
   prod_imagem: string | null,
   loja_desc: string
-}
-
-export const TProdutoLojaVazio = {
-  id: '',
-  id_loja: '',
-  preco_venda: '',
-  prod_desc: '',
-  prod_custo: '',
-  prod_imagem: '',
-  loja_desc: ''
 }
 
 export type TRetornoApiProdLoja = {
@@ -58,24 +42,10 @@ export type TLojaPreco = {
   preco_venda: string
 }
 
-
-export const TLojaPrecoVazio = {
-  id_loja: '',
-  preco_venda: ''
-}
-
 export type TObjCadastro = {
   id: string,
   descricao: string,
   custo: string,
   imagem: string,
   lojas_preco: Array<TLojaPreco>
-}
-
-export const TObjCadastroVazio = {
-  id: '',
-  descricao: '',
-  custo: '',
-  imagem: '',
-  lojas_preco: [TLojaPrecoVazio]
 }

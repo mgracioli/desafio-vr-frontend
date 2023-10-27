@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { TLojaPreco, TObjCadastro, TProdutoLoja, TRetornoApiProdLoja } from '../@types/produto.types';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FormValidator } from 'src/app/utils/form-validator';
-import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
+import { TLojaPreco, TObjCadastro, TProdutoLoja, TRetornoApi } from '../@types/produto.types';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { TLoja } from '../@types/loja.types';
@@ -11,32 +9,28 @@ import { MatDialog } from '@angular/material/dialog';
 import { Utils } from 'src/app/utils/sistema.utils';
 
 @Component({
-  selector: 'app-cadastro-edicao',
-  templateUrl: './cadastro-edicao.component.html',
-  styleUrls: ['./cadastro-edicao.component.scss']
+  selector: 'cadastro-edicao-produto',
+  templateUrl: './cadastro-edicao-produto.component.html',
+  styleUrls: ['./cadastro-edicao-produto.component.scss']
 })
-export class CadastroEdicaoComponent {
+export class CadastroEdicaoProdutoComponent {
   lojas$: Observable<TLoja[]>;
   formulario = this.formBuilder.group({
     id: [{ value: '', disabled: true }],
-    descricao: '',
-    custo: ''
-    // custo: ['', [FormValidator.equalsTo('email')]],
+    descricao: ['', [Validators.required, Validators.maxLength(60)]],
+    custo: ['']
   });
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient,
     private produtoService: ProdutoService,
     public dialog: MatDialog,
     private utils: Utils) {
-    // super();  //chama o construtor da classe BaseFormComponet
   }
 
   ngOnInit(): void {
-    const produto: TRetornoApiProdLoja = this.route.snapshot.data['produtosLoja']
+    const produto: TRetornoApi<TProdutoLoja[]> = this.route.snapshot.data['produtosLoja']
 
     if (produto.retorno.dados) {
       const arrayProdutos: TProdutoLoja[] = [...produto.retorno.dados];
@@ -55,7 +49,6 @@ export class CadastroEdicaoComponent {
         custo: '',
       })
 
-      // this.produtoService.atualizaDados(produto.retorno.dados)
       this.produtoService.atualizaArrayProdutos([] as TProdutoLoja[])
     }
   }
@@ -63,16 +56,11 @@ export class CadastroEdicaoComponent {
   excluirProduto() {
     if (this.formulario.value.id && this.formulario.value.id != '') {
       this.produtoService.excluirProduto(this.formulario.value.id ? parseInt(this.formulario.value.id) : null)
-        .subscribe(data => {
-          if (data.retorno.codigo_status === 200) {
-            this.resetarDados();
-            console.log('wwwcerto', data)
-          } else {
-            console.log('wwerrroo', data)
-          }
+        .subscribe((data: TRetornoApi<null>): void => {
+          this.toastMensagemRetorno(data)
         })
     } else {
-      //toast de erro (pode ser q esteja tentando excluir um produto q nao existe, que está sendo cadastrado agora)
+      this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto não pode se excluído!' }])
     }
   }
 
@@ -97,8 +85,12 @@ export class CadastroEdicaoComponent {
 
     if (this.objetoValido(objCadastro)) {
       this.produtoService.gravarProduto(objCadastro).subscribe(data => {
-        if (data.retorno.mensagens) {
+        if (data.retorno.codigo_status == 200) {
+          this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto gravado com sucesso!' }])
+        } else if (data.retorno.mensagens) {
           this.utils.exibeToast(data.retorno.mensagens)
+        } else {
+          this.utils.exibeToast([{ codigo: '0.00', descricao: 'Erro ao gravar produto!' }])
         }
       })
     }
@@ -118,5 +110,20 @@ export class CadastroEdicaoComponent {
   resetarDados() {
     this.formulario.reset();
     this.produtoService.atualizaArrayProdutos([])
+  }
+
+  verificaValidTouched(campo: string) {
+    return !this.formulario.get(campo)!.valid && this.formulario.get(campo)!.touched
+  }
+
+  toastMensagemRetorno(data: TRetornoApi<null>) {
+    if (data.retorno.codigo_status === 200) {
+      this.resetarDados();
+      this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto excluído com sucesso!' }])
+    } else if (data.retorno.codigo_status === 500 && data.retorno.mensagens) {
+      this.utils.exibeToast(data.retorno.mensagens)
+    } else {
+      this.utils.exibeToast([{ codigo: '0.00', descricao: 'Erro ao realizar operação!' }])
+    }
   }
 }

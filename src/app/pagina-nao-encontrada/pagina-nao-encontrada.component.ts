@@ -11,8 +11,8 @@ export class PaginaNaoEncontradaComponent {
     private router: Router,
   ) { };
 
-  proximaPagina() {
-    this.router.navigate(['']); //isso resulta na url: localhost:4200/cursos?pagina=numero_da_pagina
+  voltarParaHome() {
+    this.router.navigate(['']);
   }
 
 }

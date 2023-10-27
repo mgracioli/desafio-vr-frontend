@@ -1,25 +1,19 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild, AfterViewInit, Output, EventEmitter, signal, Input, SimpleChanges, effect } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
-import { merge, Observable, of as observableOf, of, Subject } from 'rxjs';
+import { Component, ViewChild, Output, EventEmitter, Input, effect } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatTableModule } from '@angular/material/table';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgIf, DatePipe } from '@angular/common';
-import { TProduto, TProdutoLoja, TRetornoApiProdLoja } from 'src/app/produto/@types/produto.types';
+import { TProdutoLoja } from 'src/app/produto/@types/produto.types';
 import { ProdutoService } from 'src/app/services/produto.service';
-import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalLojaPrecoComponent } from 'src/app/components/modal-loja-preco/modal-loja-preco.component';
-import { TLoja } from '../../@types/loja.types';
 
 @Component({
-  selector: 'gridProdutoLoja',
-  templateUrl: './grid-produto-loja.component.html',
-  styleUrls: ['./grid-produto-loja.component.scss']
+  selector: 'grid-cadastro-edicao-produto',
+  templateUrl: './grid-cadastro-edicao-produto.component.html',
+  styleUrls: ['./grid-cadastro-edicao-produto.component.scss']
 })
-export class GridLojaComponent {
+export class GridCadastroEdicaoProdutoComponent {
   @Input() resetForm: boolean;
   @Output() editar = new EventEmitter();
 
@@ -103,20 +97,9 @@ export class GridLojaComponent {
   excluirProdutoLoja(id_produto: number, id_loja: string) {
     const arrayProdExcluido = this.arrayProdutos.filter(prodAnt => prodAnt.id_loja !== id_loja)
     this.produtoService.atualizaArrayProdutos(arrayProdExcluido)
-
-    // this.produtoService.excluirProduto(id_produto, id_loja).subscribe(data => {
-    //   if (data.retorno.codigo_status === 200) {
-    //     const arrayProdExcluido = this.arrayProdutos.filter(prodAnt => prodAnt.id_loja !== id_loja)
-
-    //     this.produtoService.atualizaArrayProdutos(arrayProdExcluido)
-    //   } else {
-    //     //erro ao excluir (pode nao ter achado o produto)
-    //     console.log('wwErro ao excluir produto', data)
-    //   }
-    // })
   }
 
-  adicionarLoja() {
+  adicionarLojaPreco() {
     let dialogRef = this.dialog.open(ModalLojaPrecoComponent)
     dialogRef.componentInstance.registroEdicaoLoja.idLoja = null
     dialogRef.componentInstance.registroEdicaoLoja.descricao = ''

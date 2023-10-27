@@ -1,40 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { Observable, catchError, of } from 'rxjs';
-import { FormValidator } from '../utils/form-validator';
-import { TProduto } from './@types/produto.types';
+import { Observable } from 'rxjs';
+import { TProduto } from '../@types/produto.types';
 import { Router, ActivatedRoute } from '@angular/router'
-import { TLoja } from './@types/loja.types';
+import { TLoja } from '../@types/loja.types';
+
 @Component({
-  selector: 'produto',
-  templateUrl: './produto.component.html',
-  styleUrls: ['./produto.component.scss']
+  selector: 'consulta-produto',
+  templateUrl: './consulta-produto.component.html',
+  styleUrls: ['./consulta-produto.component.scss']
 })
-export class ProdutoComponent implements OnInit {
+export class ConsultaProdutoComponent implements OnInit {
   formulario: FormGroup;
   lojas$: Observable<TLoja[]>;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
-    private http: HttpClient) {
-    // super();  //chama o construtor da classe BaseFormComponet
+    private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
     this.formulario = this.formBuilder.group({
       codigo: [null],
       descricao: [null, [Validators.required, Validators.maxLength(60)]],
-      custo: [null, [FormValidator.equalsTo('email')]],
+      custo: [null],
       precoVenda: [null],
     });
   }
 
   onSubmit() {
-
+    console.log('wwwsunmittt')
   }
 
   incluirProduto() {

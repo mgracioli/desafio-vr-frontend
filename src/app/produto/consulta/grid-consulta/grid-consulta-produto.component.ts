@@ -1,22 +1,19 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
-import { merge, Observable, of as observableOf, of } from 'rxjs';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { merge, of as observableOf, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatTableModule } from '@angular/material/table';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgIf, DatePipe } from '@angular/common';
-import { TProduto, TRetornoApiProduto, TRetornoApiProdLoja } from 'src/app/produto/@types/produto.types';
+import { TProduto, TRetornoApi } from 'src/app/produto/@types/produto.types';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { ActivatedRoute } from '@angular/router';
+import { TMensagem } from 'src/app/utils/@types/sistema.types';
 
 @Component({
-  selector: 'grid',
-  templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss'],
+  selector: 'grid-consulta-produto',
+  templateUrl: './grid-consulta-produto.component.html',
+  styleUrls: ['./grid-consulta-produto.component.scss'],
 })
-export class GridComponent implements AfterViewInit {
+export class GridConsultaComponent implements AfterViewInit {
   @Output() editar = new EventEmitter();
 
   displayedColumns: string[] = ['codigo', 'descricao', 'custo', 'acoes'];
@@ -35,7 +32,7 @@ export class GridComponent implements AfterViewInit {
   ) { }
 
   ngOnInit() {
-    const prodRetorno: TRetornoApiProduto = this.route.snapshot.data['produtos']
+    const prodRetorno: TRetornoApi<TProduto[]> = this.route.snapshot.data['produtos']
 
     if (prodRetorno.retorno.dados) {
       this.produtos = [...prodRetorno.retorno.dados];

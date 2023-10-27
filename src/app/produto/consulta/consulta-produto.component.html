@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <nav class="navbar navbar-light bg-light">
+    <mat-icon class="grid-item add-icon" type="button" (click)="incluirProduto()" aria-hidden="false"
+      aria-label="Example home icon" fontIcon="add_circle_outline" />
+    <span class="grid-item page-title">
+      Consulta de Produto
+    </span>
+  </nav>
+
+  <div class="container-central">
+    <form class="form-horizontal" [formGroup]="formulario" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <div class="col-2">
+          <label for="codigo">Código</label>
+          <input id="codigo" formControlName="codigo" class="form-control">
+        </div>
+
+        <div class="col-4">
+          <label for="descricao">Descrição</label>
+          <input id="descricao" formControlName="descricao" class="form-control">
+        </div>
+
+        <div class="col-2">
+          <label for="custo">Custo</label>
+          <input id="custo" formControlName="custo" class="form-control">
+        </div>
+
+        <div class="col-2">
+          <label for="precoVenda">Preço de venda</label>
+          <input id="precoVenda" formControlName="precoVenda" class="form-control">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="container-central">
+    <grid-consulta-produto (editar)="onEdit($event)" />
+  </div>
+</div>

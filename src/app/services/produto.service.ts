@@ -1,115 +1,68 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, signal } from "@angular/core";
-import { TProdutoLoja, TRetornoApiProduto, TRetornoApiErro, TRetornoApiProdLoja, TObjCadastro } from "../produto/@types/produto.types";
-import { environment } from "src/environments/environment";
-import { Observable, catchError, of, Subject } from "rxjs";
+import { TProdutoLoja, TObjCadastro, TRetornoApi, TProduto } from "../produto/@types/produto.types";
+import { Observable, catchError, of } from "rxjs";
+import { TMensagem } from "../utils/@types/sistema.types";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProdutoService {
-  retornoApiErro: TRetornoApiErro = {
-    retorno: {
-      status: "Erro",
-      codigo_status: 500,
-      mensagens: [{
-        codigo: '0.00',
-        descricao: 'Erro de servidor'
-      }]
+  retornaObjErro(mensagensErro: TMensagem[] | null = null) {
+    return {
+      retorno: {
+        status: "Erro",
+        codigo_status: 500,
+        mensagens: mensagensErro ?? [{ codigo: '0.00', descricao: 'Erro ao realizar operação' }]
+      }
     }
   }
 
   constructor(private http: HttpClient) { }
 
-  buscarProdutos(): Observable<TRetornoApiProduto | TRetornoApiErro> {
-    return this.http.get<TRetornoApiProduto | TRetornoApiErro>('/api/v1/produto').pipe(
+  buscarProdutos(): Observable<TRetornoApi<TProduto[]>> {
+    return this.http.get<TRetornoApi<TProduto[]>>('/api/v1/produto').pipe(
       catchError(erro => {
-        const objErro = {
-          ...this.retornoApiErro,
-          mensagens: [{
-            codigo: '0.00',
-            descricao: erro.error.retorno.mensagens
-          }]
-        }
-        return of(objErro)
+        return of(this.retornaObjErro(erro.error.retorno.mensagens))
       })
     );
   }
 
-  buscarProduto(id: string | null): Observable<TRetornoApiProdLoja | TRetornoApiProduto | TRetornoApiErro> {
+  buscarProduto(id: string | null): Observable<TRetornoApi<TProdutoLoja[]>> {
     if (id) {
-      return this.http.get<TRetornoApiProdLoja | TRetornoApiErro>(`/api/v1/produto/${id}?loja=true`).pipe(
+      return this.http.get<TRetornoApi<TProdutoLoja[]>>(`/api/v1/produto/${id}?loja=true`).pipe(
         catchError(erro => {
-          const objErro = {
-            ...this.retornoApiErro,
-            mensagens: [{
-              codigo: '0.00',
-              descricao: erro.error.retorno.mensagens
-            }]
-          }
-          return of(objErro)
+          return of(this.retornaObjErro(erro.error.retorno.mensagens))
         })
       );
     } else {
-      return this.http.get<TRetornoApiProduto | TRetornoApiErro>(`/api/v1/produto/${id}`).pipe(
-        catchError(erro => {
-          const objErro = {
-            ...this.retornoApiErro,
-            mensagens: [{
-              codigo: '0.00',
-              descricao: erro.error.retorno.mensagens
-            }]
-          }
-          return of(objErro)
-        })
-      );
+      return of(this.retornaObjErro([{ codigo: '0.00', descricao: 'Id do produto não informado.' }]))
     }
   }
 
-  excluirProduto(id: number | null, idLoja: number | null = null): Observable<TRetornoApiProduto | TRetornoApiErro> {
+  excluirProduto(id: number | null, idLoja: number | null = null): Observable<TRetornoApi<null>> {
     if (id) {
-      return this.http.delete<any>(`/api/v1/produto?id_produto=${id}&id_loja=${idLoja}`).pipe(
+      return this.http.delete<TRetornoApi<null>>(`/api/v1/produto?id_produto=${id}&id_loja=${idLoja}`).pipe(
         catchError((erro) => {
-          const objErro = {
-            ...this.retornoApiErro,
-            mensagens: [{
-              codigo: '0.00',
-              descricao: erro.error.retorno.mensagens
-            }]
-          }
-          return of(objErro)
+          return of(this.retornaObjErro(erro.error.retorno.mensagens))
         })
       );
     } else {
-      return of(this.retornoApiErro)
+      return of(this.retornaObjErro([{ codigo: '0.00', descricao: 'Id do produto não informado' }]))
     }
   }
 
-  gravarProduto(produto: Partial<TObjCadastro>): Observable<any> {
-    if (produto.id) {
-      return this.http.put<TObjCadastro>('/api/v1/produto', produto).pipe(
+  gravarProduto(produto: TObjCadastro): Observable<TRetornoApi<TProduto[]>> {
+    if (produto.id != '') {
+      return this.http.put<TRetornoApi<TProduto[]>>('/api/v1/produto', produto).pipe(
         catchError((erro) => {
-          const objErro = {
-            ...this.retornoApiErro,
-            mensagens: [{
-              codigo: '0.00',
-              descricao: erro
-            }]
-          }
-          return of(objErro)
+          return of(this.retornaObjErro(erro.error.retorno.mensagens))
         })
       );
     } else {
-      return this.http.post<TObjCadastro>('/api/v1/produto', produto).pipe(
+      return this.http.post<TRetornoApi<TProduto[]>>('/api/v1/produto', produto).pipe(
         catchError((erro) => {
-          const objErro = {
-            ...this.retornoApiErro,
-            mensagens: [{
-              codigo: '0.00',
-              descricao: erro
-            }]
-          }
-          return of(objErro)
+          return of(this.retornaObjErro(erro.error.retorno.mensagens))
         })
       );
     }

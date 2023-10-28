@@ -1,13 +1,17 @@
+.row {
+  margin-left: 0;
+}
+
+.row>* {
+  padding-left: 0
+}
+
 .container-fluid {
   padding: 0
 }
 
 .container-central {
   padding: 20px 40px
-}
-
-.row>* {
-  padding-left: 0
 }
 
 .navbar {

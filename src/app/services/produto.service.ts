@@ -20,17 +20,17 @@ export class ProdutoService {
 
   constructor(private http: HttpClient) { }
 
-  buscarProdutos(): Observable<TRetornoApi<TProduto[]>> {
-    return this.http.get<TRetornoApi<TProduto[]>>('/api/v1/produto').pipe(
+  buscarProdutos(page: number = 1, limit: number = 10): Observable<TRetornoApi<TProduto[]>> {
+    return this.http.get<TRetornoApi<TProduto[]>>(`/api/v1/produto?page=${page}&limit=${limit}`).pipe(
       catchError(erro => {
         return of(this.retornaObjErro(erro.error.retorno.mensagens))
       })
     );
   }
 
-  buscarProduto(id: string | null): Observable<TRetornoApi<TProdutoLoja[]>> {
+  buscarProduto(id: string | null, page: number = 1, limit: number = 10): Observable<TRetornoApi<TProdutoLoja[]>> {
     if (id) {
-      return this.http.get<TRetornoApi<TProdutoLoja[]>>(`/api/v1/produto/${id}?loja=true`).pipe(
+      return this.http.get<TRetornoApi<TProdutoLoja[]>>(`/api/v1/produto/${id}?loja=true&page=${page}&limit=${limit}`).pipe(
         catchError(erro => {
           return of(this.retornaObjErro(erro.error.retorno.mensagens))
         })

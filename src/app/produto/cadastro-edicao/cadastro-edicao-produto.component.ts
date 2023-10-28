@@ -57,7 +57,8 @@ export class CadastroEdicaoProdutoComponent {
     if (this.formulario.value.id && this.formulario.value.id != '') {
       this.produtoService.excluirProduto(this.formulario.value.id ? parseInt(this.formulario.value.id) : null)
         .subscribe((data: TRetornoApi<null>): void => {
-          this.toastMensagemRetorno(data)
+          this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto excluído com sucesso!' }])
+          //Navegar para a Home
         })
     } else {
       this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto não pode se excluído!' }])

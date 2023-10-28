@@ -36,7 +36,7 @@ export class GridCadastroEdicaoProdutoComponent {
   ) {
     effect(() => {
       const produtos = produtoService.arrayProdutos()
-
+      console.log('wwwcdaadaa', produtos)
       if (produtos?.[0]?.loja_desc && produtos[0].loja_desc !== null) {
         this.arrayProdutos = produtos;
       } else {
@@ -90,8 +90,12 @@ export class GridCadastroEdicaoProdutoComponent {
             this.min = this.max - this.limit
           }
 
-          const novoArr = this.produtoService.arrayProdutos().filter((_, index) => {
-            return index >= this.min && index < this.max
+          const novoArr = this.produtoService.arrayProdutos().filter((produto, index) => {
+            return (
+              produto.loja_desc !== null &&
+              index >= this.min &&
+              index < this.max
+            )
           })
 
           return of({

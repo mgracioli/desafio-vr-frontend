@@ -31,7 +31,7 @@ export class ConsultaProdutoComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('wwwsunmittt')
+    console.log('wwwsunmittt') //validar
   }
 
   incluirProduto() {

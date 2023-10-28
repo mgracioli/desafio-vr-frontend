@@ -19,15 +19,16 @@ export class GridCadastroEdicaoProdutoComponent {
 
   arrayProdutos: TProdutoLoja[] = []
   displayedColumns: string[] = ['loja', 'precoVenda', 'acoes'];
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
-  limit = 5
-  currentPage = 0
-  total = 0
+  resultsLength: number = 0;
+  isLoadingResults: boolean = true;
+  isRateLimitReached: boolean = false;
+  limit: number = 5
+  currentPage: number = 0
+  total: number = 0
+  max: number = 0
+  min: number = 0
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private produtoService: ProdutoService,
@@ -37,19 +38,17 @@ export class GridCadastroEdicaoProdutoComponent {
       const produtos = produtoService.arrayProdutos()
 
       if (produtos?.[0]?.loja_desc && produtos[0].loja_desc !== null) {
-        //remover esse pop (tirar paginacao do get produtoloja)
-        produtoService.arrayProdutos().pop()
-        this.arrayProdutos = produtoService.arrayProdutos();
-        //verificar paginacao
-        this.total = produtoService.arrayProdutos().length
+        this.arrayProdutos = produtos;
       } else {
         this.arrayProdutos = [];
       }
+
+      this.atualizarGrid(false, true)
     })
   }
 
   ngAfterViewInit() {
-    this.atualizaGrid()
+    this.atualizarGrid()
   }
 
   editarProdutoLoja(loja: TProdutoLoja) {
@@ -58,12 +57,11 @@ export class GridCadastroEdicaoProdutoComponent {
     dialogRef.componentInstance.registroEdicaoLoja.descricao = loja.loja_desc
   }
 
-  excluirProdutoLoja(id_produto: number, id_loja: string) {
-    const arrayProdExcluido = this.arrayProdutos.filter(prodAnt => prodAnt.id_loja !== id_loja)
+  excluirProdutoLoja(id_loja: string) {
+    const arrayProdExcluido = this.produtoService.arrayProdutos().filter(prodAnt => prodAnt.id_loja !== id_loja)
     this.produtoService.atualizaArrayProdutos(arrayProdExcluido)
-    //verificar aabaixo
-    this.total = arrayProdExcluido.length
-    this.atualizaGrid()
+
+    this.atualizarGrid(true)
   }
 
   adicionarLojaPreco() {
@@ -72,43 +70,38 @@ export class GridCadastroEdicaoProdutoComponent {
     dialogRef.componentInstance.registroEdicaoLoja.descricao = ''
   }
 
-  handlePageEvent(pageEvent: PageEvent) {
+  trocarDePagina(pageEvent: PageEvent) {
     this.currentPage = pageEvent.pageIndex;
   }
 
-  atualizaGrid() {
+  atualizarGrid(exclusao: boolean = false, edicao: boolean = false) {
     this.paginator.page
       .pipe(
-        startWith({}),
-        switchMap(() => {
+        startWith({} as PageEvent),
+        switchMap((paginator: PageEvent) => {
           this.isLoadingResults = true;
-          console.log('wwarrayProdutos', this.arrayProdutos)
 
-          const max = this.currentPage + 1 * this.limit
-          const min = max - this.limit
+          if (!exclusao && !edicao) {
+            this.max = ((!paginator.previousPageIndex) || (paginator.previousPageIndex < paginator.pageIndex)) ?
+              this.max + this.limit
+              :
+              this.max - this.limit
 
-          console.log('wwamax', max)
-          console.log('wwamin', min)
+            this.min = this.max - this.limit
+          }
 
-          const novoArr = this.arrayProdutos.filter((produto, index) => {
-            index >= min && index <= max
+          const novoArr = this.produtoService.arrayProdutos().filter((_, index) => {
+            return index >= this.min && index < this.max
           })
 
-          console.log('wwwnovovaar', novoArr)
-          console.log('wwtotal', this.total)
           return of({
             retorno: {
-              dados: [...novoArr, { total: this.total }]
+              dados: novoArr.length ? [...novoArr] : null
             }
           })
-          // return this.produtoService.buscarProduto(this.arrayProdutos[0].id, this.currentPage, this.limit)
-          //   .pipe(
-          //     catchError(() => of([]))
-          //   );
         }),
 
         map((data: any) => {
-          console.log('wwwdataa', data.retorno.dados)
           const dados = data.retorno.dados ?? null
           this.isLoadingResults = false;
           this.isRateLimitReached = dados === null;
@@ -117,11 +110,11 @@ export class GridCadastroEdicaoProdutoComponent {
             return [];
           }
 
-          const objTotal = dados.pop()
-          this.resultsLength = objTotal.total;
+          // const objTotal = dados.pop()
+          this.resultsLength = this.produtoService.arrayProdutos().length;
           return dados;
         })
       )
-      .subscribe(data => this.produtoService.atualizaArrayProdutos(data));
+      .subscribe(data => { this.arrayProdutos = data });
   }
 }

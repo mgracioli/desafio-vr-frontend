@@ -19,7 +19,7 @@ export class GridConsultaComponent {
   editar = new EventEmitter();
 
   displayedColumns: string[] = ['codigo', 'descricao', 'custo', 'acoes'];
-  produtos: TProduto[] = [];
+  arrayProdutos: TProduto[] = [];
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -40,12 +40,12 @@ export class GridConsultaComponent {
     const prodRetorno: TRetornoApi<TProduto[]> = this.route.snapshot.data['produtos']
 
     if (prodRetorno.retorno.dados) {
-      this.produtos = [...prodRetorno.retorno.dados];
+      this.arrayProdutos = [...prodRetorno.retorno.dados];
     }
   }
 
   ngAfterViewInit() {
-    this.atualizaGrid()
+    this.atualizarGrid()
   }
 
   editarProdutoLoja(produto: TProduto) {
@@ -56,7 +56,7 @@ export class GridConsultaComponent {
     this.produtoService.excluirProduto(rowId).subscribe(data => {
       if (data.retorno.codigo_status === 200) {
         this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto excluído com sucesso!' }])
-        this.atualizaGrid()
+        this.atualizarGrid()
       } else {
         this.utils.exibeToast([{ codigo: '0.00', descricao: 'Erro ao excluir produto' }])
       }
@@ -67,7 +67,7 @@ export class GridConsultaComponent {
     this.currentPage = pageEvent.pageIndex;
   }
 
-  atualizaGrid() {
+  atualizarGrid() {
     this.paginator.page
       .pipe(
         startWith({}),
@@ -94,6 +94,6 @@ export class GridConsultaComponent {
           return dados;
         })
       )
-      .subscribe(data => { this.produtos = data });
+      .subscribe(data => { this.arrayProdutos = data });
   }
 }

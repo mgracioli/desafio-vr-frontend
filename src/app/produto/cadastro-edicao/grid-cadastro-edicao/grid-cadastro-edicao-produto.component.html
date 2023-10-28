@@ -30,7 +30,7 @@
           </th>
           <td mat-cell *matCellDef="let produto" class="text-center">
             <div class="d-flex align-items-center justify-content-end">
-              <mat-icon type="button" (click)="excluirProdutoLoja(produto.id, produto.id_loja)" aria-hidden="false"
+              <mat-icon type="button" (click)="excluirProdutoLoja(produto.id_loja)" aria-hidden="false"
                 aria-label="Example home icon" fontIcon="delete" />
 
               <mat-icon type="button" (click)="editarProdutoLoja(produto)" aria-hidden="false"
@@ -46,5 +46,5 @@
   </div>
 
   <mat-paginator [length]="resultsLength" [pageSize]="limit" [pageIndex]="currentPage"
-    (page)="handlePageEvent($event)" />
+    (page)="trocarDePagina($event)" />
 </div>

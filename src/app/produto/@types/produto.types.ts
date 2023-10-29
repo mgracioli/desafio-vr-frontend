@@ -1,13 +1,10 @@
+import { TMensagem } from "src/app/utils/@types/sistema.types"
+
 export type TProduto = {
   id: number,
   descricao: string,
   custo: string,
   imagem: string,
-}
-
-type TMensagem = {
-  codigo: string,
-  descricao: string
 }
 
 export type TRetornoApi<T> = {
@@ -27,14 +24,6 @@ export type TProdutoLoja = {
   prod_custo: string,
   prod_imagem: string | null,
   loja_desc: string
-}
-
-export type TRetornoApiProdLoja = {
-  retorno: {
-    status: string,
-    codigo_status: number,
-    dados: TProdutoLoja[] | null
-  }
 }
 
 export type TLojaPreco = {

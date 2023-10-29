@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+
 import { FormValidator } from 'src/app/utils/form-validator';
 
 @Component({
@@ -10,11 +10,6 @@ import { FormValidator } from 'src/app/utils/form-validator';
 export class CampoErroComponent {
   @Input() control: any;
   @Input() mensagem: string;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   get errorMessage() {
     for (const propertyName in this.control.errors) {

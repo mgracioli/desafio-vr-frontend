@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { TLojaPreco, TObjCadastro, TProdutoLoja, TRetornoApi } from '../@types/produto.types';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { TLoja } from '../@types/loja.types';
 import { MatDialog } from '@angular/material/dialog';
 import { Utils } from 'src/app/utils/sistema.utils';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cadastro-edicao-produto',
@@ -26,14 +27,14 @@ export class CadastroEdicaoProdutoComponent {
     private route: ActivatedRoute,
     private produtoService: ProdutoService,
     public dialog: MatDialog,
-    private utils: Utils) {
-  }
+    private utils: Utils,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
-    const produto: TRetornoApi<TProdutoLoja[]> = this.route.snapshot.data['produtosLoja']
-
-    if (produto.retorno.dados) {
-      const arrayProdutos: TProdutoLoja[] = [...produto.retorno.dados];
+    const produtosRetorno: TRetornoApi<TProdutoLoja[]> = this.route.snapshot.data['produtosLoja']
+    if (produtosRetorno && produtosRetorno.retorno.dados) {
+      const arrayProdutos: TProdutoLoja[] = [...produtosRetorno.retorno.dados];
 
       this.formulario.setValue({
         id: arrayProdutos[0].id,
@@ -41,7 +42,7 @@ export class CadastroEdicaoProdutoComponent {
         custo: arrayProdutos[0].prod_custo,
       })
 
-      this.produtoService.atualizaArrayProdutos(produto.retorno.dados)
+      this.produtoService.atualizaArrayProdutosLoja(produtosRetorno.retorno.dados)
     } else {
       this.formulario.setValue({
         id: '',
@@ -49,24 +50,28 @@ export class CadastroEdicaoProdutoComponent {
         custo: '',
       })
 
-      this.produtoService.atualizaArrayProdutos([] as TProdutoLoja[])
+      this.produtoService.atualizaArrayProdutosLoja([] as TProdutoLoja[])
     }
   }
 
   excluirProduto() {
-    if (this.formulario.value.id && this.formulario.value.id != '') {
-      this.produtoService.excluirProduto(this.formulario.value.id ? parseInt(this.formulario.value.id) : null)
-        .subscribe((data: TRetornoApi<null>): void => {
+    const idProduto = this.formulario.get('id')?.value
+
+    if (idProduto && idProduto != '') {
+      this.produtoService.excluirProduto(parseInt(idProduto))
+        .pipe(take(1))
+        .subscribe((): void => {
           this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto excluído com sucesso!' }])
-          //Navegar para a Home
         })
+
+      this.router.navigate(['']);
     } else {
       this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto não pode se excluído!' }])
     }
   }
 
   cadastrarProdutoLoja() {
-    const arrayLojaPreco: TLojaPreco[] = this.produtoService.arrayProdutos()
+    const arrayLojaPreco: TLojaPreco[] = this.produtoService.arrayProdutosLoja()
       .map(data => {
         return {
           id_loja: data.id_loja,
@@ -88,6 +93,7 @@ export class CadastroEdicaoProdutoComponent {
       this.produtoService.gravarProduto(objCadastro).subscribe(data => {
         if (data.retorno.codigo_status == 200) {
           this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto gravado com sucesso!' }])
+          this.router.navigate(['']);
         } else if (data.retorno.mensagens) {
           this.utils.exibeToast(data.retorno.mensagens)
         } else {
@@ -110,7 +116,7 @@ export class CadastroEdicaoProdutoComponent {
 
   resetarDados() {
     this.formulario.reset();
-    this.produtoService.atualizaArrayProdutos([])
+    this.produtoService.atualizaArrayProdutosLoja([] as TProdutoLoja[])
   }
 
   verificaValidTouched(campo: string) {

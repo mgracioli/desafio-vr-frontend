@@ -1,53 +1,53 @@
-.example-container {
-  position: relative;
-}
-
-.example-table-container {
-  position: relative;
-  min-height: 200px;
-  max-height: 400px;
-  overflow: auto;
-}
-
-table {
-  width: 100%;
-}
-
-.example-loading-shade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 56px;
-  right: 0;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.example-rate-limit-reached {
-  max-width: 360px;
-  text-align: center;
-}
-
 td,
 th {
   text-align: center !important;
   vertical-align: middle !important;
 }
 
-.container-icone-tabela {
-  position: relative
-}
+.example-container {
+  position: relative;
 
-.icone-add-loja {
-  position: absolute;
-  color: #d9d9d9;
-  z-index: 10;
-  font-size: 1.5rem;
-  top: 15px;
-  left: 10px
+  .example-table-container {
+    position: relative;
+    min-height: 200px;
+    max-height: 400px;
+    overflow: auto;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .example-loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .example-rate-limit-reached {
+    max-width: 360px;
+    text-align: center;
+  }
+
+  .container-icone-tabela {
+    position: relative;
+
+    .icone-add-loja {
+      position: absolute;
+      color: #d9d9d9;
+      z-index: 10;
+      font-size: 1.5rem;
+      top: 15px;
+      left: 10px
+    }
+  }
 }
 
 .mat-icon {

@@ -12,5 +12,4 @@ export class ToastComponent {
 
   @Input()
   tipoToast: string;
-
 }

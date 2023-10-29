@@ -1,11 +1,11 @@
-import { Component, ViewChild, Output, EventEmitter, Input, effect } from '@angular/core';
+import { Component, ViewChild, effect, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { of } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject, of } from 'rxjs';
+import { map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+
 import { TProdutoLoja } from 'src/app/produto/@types/produto.types';
 import { ProdutoService } from 'src/app/services/produto.service';
-import { MatDialog } from '@angular/material/dialog';
 import { ModalLojaPrecoComponent } from 'src/app/components/modal-loja-preco/modal-loja-preco.component';
 
 @Component({
@@ -13,12 +13,9 @@ import { ModalLojaPrecoComponent } from 'src/app/components/modal-loja-preco/mod
   templateUrl: './grid-cadastro-edicao-produto.component.html',
   styleUrls: ['./grid-cadastro-edicao-produto.component.scss']
 })
-export class GridCadastroEdicaoProdutoComponent {
-  @Input() resetForm: boolean;
-  @Output() editar = new EventEmitter();
-
-  arrayProdutos: TProdutoLoja[] = []
+export class GridCadastroEdicaoProdutoComponent implements AfterViewInit, OnDestroy {
   displayedColumns: string[] = ['loja', 'precoVenda', 'acoes'];
+  arrayProdutos: TProdutoLoja[] = []
   resultsLength: number = 0;
   isLoadingResults: boolean = true;
   isRateLimitReached: boolean = false;
@@ -27,6 +24,7 @@ export class GridCadastroEdicaoProdutoComponent {
   total: number = 0
   max: number = 0
   min: number = 0
+  unsubscribe$ = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -35,15 +33,15 @@ export class GridCadastroEdicaoProdutoComponent {
     public dialog: MatDialog
   ) {
     effect(() => {
-      const produtos = produtoService.arrayProdutos()
-      console.log('wwwcdaadaa', produtos)
+      const produtos = produtoService.arrayProdutosLoja()
+
       if (produtos?.[0]?.loja_desc && produtos[0].loja_desc !== null) {
         this.arrayProdutos = produtos;
+        this.atualizarGrid(false, true)
       } else {
-        this.arrayProdutos = [];
-      }
 
-      this.atualizarGrid(false, true)
+        this.arrayProdutos = [] as TProdutoLoja[];
+      }
     })
   }
 
@@ -51,15 +49,21 @@ export class GridCadastroEdicaoProdutoComponent {
     this.atualizarGrid()
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   editarProdutoLoja(loja: TProdutoLoja) {
     let dialogRef = this.dialog.open(ModalLojaPrecoComponent)
     dialogRef.componentInstance.registroEdicaoLoja.idLoja = loja.id_loja
     dialogRef.componentInstance.registroEdicaoLoja.descricao = loja.loja_desc
+    dialogRef.componentInstance.precoVenda = loja.preco_venda
   }
 
   excluirProdutoLoja(id_loja: string) {
-    const arrayProdExcluido = this.produtoService.arrayProdutos().filter(prodAnt => prodAnt.id_loja !== id_loja)
-    this.produtoService.atualizaArrayProdutos(arrayProdExcluido)
+    const arrayProdExcluido = this.produtoService.arrayProdutosLoja().filter(prodAnt => prodAnt.id_loja !== id_loja)
+    this.produtoService.atualizaArrayProdutosLoja(arrayProdExcluido)
 
     this.atualizarGrid(true)
   }
@@ -74,14 +78,14 @@ export class GridCadastroEdicaoProdutoComponent {
     this.currentPage = pageEvent.pageIndex;
   }
 
-  atualizarGrid(exclusao: boolean = false, edicao: boolean = false) {
+  atualizarGrid(exclusao: boolean = false, cadastroEdicao: boolean = false) {
     this.paginator.page
       .pipe(
         startWith({} as PageEvent),
         switchMap((paginator: PageEvent) => {
           this.isLoadingResults = true;
 
-          if (!exclusao && !edicao) {
+          if (!exclusao && !cadastroEdicao) {
             this.max = ((!paginator.previousPageIndex) || (paginator.previousPageIndex < paginator.pageIndex)) ?
               this.max + this.limit
               :
@@ -90,7 +94,7 @@ export class GridCadastroEdicaoProdutoComponent {
             this.min = this.max - this.limit
           }
 
-          const novoArr = this.produtoService.arrayProdutos().filter((produto, index) => {
+          const novoArr = this.produtoService.arrayProdutosLoja().filter((produto, index) => {
             return (
               produto.loja_desc !== null &&
               index >= this.min &&
@@ -114,11 +118,11 @@ export class GridCadastroEdicaoProdutoComponent {
             return [];
           }
 
-          // const objTotal = dados.pop()
-          this.resultsLength = this.produtoService.arrayProdutos().length;
+          this.resultsLength = this.produtoService.arrayProdutosLoja().length;
           return dados;
         })
       )
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => { this.arrayProdutos = data });
   }
 }

@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, catchError } from 'rxjs'
-import { TLoja } from '../produto/@types/loja.types';
+
 import { TRetornoApi } from '../produto/@types/produto.types';
 import { TMensagem } from '../utils/@types/sistema.types';
+import { TLoja } from '../produto/@types/loja.types';
 
 @Injectable({
   providedIn: 'root'

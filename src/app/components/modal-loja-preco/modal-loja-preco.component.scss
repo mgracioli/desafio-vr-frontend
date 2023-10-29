@@ -2,28 +2,25 @@
   min-width: 600px;
   max-width: 800px;
   height: 40vh;
-  background-color: #ffff;
-  border: 2px solid #1d1d1d
-}
+  background-color: var(--color-white);
+  border: 2px solid var(--color-dark-grey);
 
-.cabecalho {
-  padding: 10px 15px;
-  display: flex;
-  justify-content: space-around;
-  border-bottom: 2px solid #1d1d1d
-}
+  .cabecalho {
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 2px solid var(--color-dark-grey)
+  }
 
-.grid-item {
-  margin: auto
-}
+  .page-title {
+    margin: auto;
+    font-weight: bold;
+    font-size: 1rem;
+  }
 
-.page-title {
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-.icone-cabecalho {
-  font-size: 1.7rem
+  .icone-cabecalho {
+    font-size: 1.7rem
+  }
 }
 
 .container-conteudo {

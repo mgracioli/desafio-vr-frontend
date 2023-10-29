@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+
 import { TLoja } from 'src/app/produto/@types/loja.types';
 
 @Component({

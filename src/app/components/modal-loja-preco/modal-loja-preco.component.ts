@@ -1,10 +1,12 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { take } from 'rxjs'
+
 import { TLoja } from 'src/app/produto/@types/loja.types';
 import { TProdutoLoja } from 'src/app/produto/@types/produto.types';
 import { LojaService } from 'src/app/services/loja.service'
 import { ProdutoService } from 'src/app/services/produto.service';
+import { Utils } from 'src/app/utils/sistema.utils';
 import { TRegistroEdicaoLoja } from './@Types/modal-loja-preco.types';
 
 @Component({
@@ -17,7 +19,6 @@ export class ModalLojaPrecoComponent implements OnInit {
   precoVenda: string = '';
   idLojaDropDown: string = '';
   nomeLojaDropDown: string = '';
-  ehCadastro: boolean = false;
   registroEdicaoLoja: TRegistroEdicaoLoja = {
     idLoja: null,
     descricao: ''
@@ -27,8 +28,7 @@ export class ModalLojaPrecoComponent implements OnInit {
     private lojaService: LojaService,
     private produtoService: ProdutoService,
     public dialogRef: MatDialogRef<ModalLojaPrecoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: TProdutoLoja,
-    private toast: MatSnackBar
+    private utils: Utils
   ) { }
 
   ngOnInit() {
@@ -38,11 +38,11 @@ export class ModalLojaPrecoComponent implements OnInit {
         descricao: this.registroEdicaoLoja.descricao
       }]
 
-      this.idLojaDropDown = this.options[0].id
-      this.nomeLojaDropDown = this.options[0].descricao
+      this.idLojaDropDown = this.registroEdicaoLoja.idLoja
+      this.nomeLojaDropDown = this.registroEdicaoLoja.descricao
     } else {
-      this.lojaService.buscarLojas().subscribe(data => {
-        if (data.retorno.codigo_status == 200 && data.retorno.dados) {
+      this.lojaService.buscarLojas().pipe(take(1)).subscribe(data => {
+        if (data.retorno.dados) {
           this.options = [...data.retorno.dados]
 
           this.idLojaDropDown = this.options[0].id
@@ -52,14 +52,9 @@ export class ModalLojaPrecoComponent implements OnInit {
     }
   }
 
-  defineValoresIniciaisLojaDropDown() {
-    this.idLojaDropDown = this.options[0].id
-    this.nomeLojaDropDown = this.options[0].descricao
-  }
-
   salvarPrecoELoja() {
     if (this.validaCamposModal()) {
-      let arrayProdutos = this.produtoService.arrayProdutos();
+      let arrayProdutos = this.produtoService.arrayProdutosLoja();
 
       if (this.registroEdicaoLoja.idLoja) {
         this.salvarPrecoELojaEdicaoGrid(arrayProdutos)
@@ -73,7 +68,7 @@ export class ModalLojaPrecoComponent implements OnInit {
     const retorno = (this.idLojaDropDown && this.precoVenda)
 
     if (!retorno) {
-      this.toast.open('Um ou mais campos obrigatórios não foram preenchidos corretamente.');
+      this.utils.exibeToast([{ codigo: '0.00', descricao: 'Um ou mais campos obrigatórios não foram preenchidos corretamente.' }]);
     }
 
     return retorno
@@ -81,8 +76,9 @@ export class ModalLojaPrecoComponent implements OnInit {
 
   salvarPrecoELojaCadastroGrid(arrayProdutos: TProdutoLoja[]) {
     const lojaExistente = arrayProdutos.find(prodLoja => prodLoja.id_loja == this.idLojaDropDown)
+
     if (lojaExistente) {
-      this.toast.open('Não é permitido mais que um preço de venda para a mesma loja.');
+      this.utils.exibeToast([{ codigo: '0.00', descricao: 'Não é permitido mais que um preço de venda para a mesma loja.' }]);
     } else {
       const objprodutoLoja = {
         ...arrayProdutos[0],
@@ -117,7 +113,8 @@ export class ModalLojaPrecoComponent implements OnInit {
   }
 
   finalizarCadastroEdicaoPrecoELoja(arrayProdutos: TProdutoLoja[]) {
-    this.produtoService.atualizaArrayProdutos(arrayProdutos)
+    this.produtoService.atualizaArrayProdutosLoja(arrayProdutos)
+    this.utils.exibeToast([{ codigo: '0.00', descricao: 'Loja incluída com sucesso' }])
     this.fecharModal()
   }
 

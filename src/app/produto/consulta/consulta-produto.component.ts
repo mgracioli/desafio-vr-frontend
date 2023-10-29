@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { TProduto } from '../@types/produto.types';
 import { Router, ActivatedRoute } from '@angular/router'
-import { TLoja } from '../@types/loja.types';
+
+import { GridConsultaComponent } from './grid-consulta/grid-consulta-produto.component';
 
 @Component({
   selector: 'consulta-produto',
@@ -13,32 +12,40 @@ import { TLoja } from '../@types/loja.types';
 })
 export class ConsultaProdutoComponent implements OnInit {
   formulario: FormGroup;
-  lojas$: Observable<TLoja[]>;
+
+  @ViewChild(GridConsultaComponent) gridConsulta: GridConsultaComponent;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute) {
-  }
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit(): void {
     this.formulario = this.formBuilder.group({
-      codigo: [null],
-      descricao: [null, [Validators.required, Validators.maxLength(60)]],
-      custo: [null],
-      precoVenda: [null],
+      codigo: '',
+      descricao: ['', [Validators.maxLength(60)]],
+      custo: '',
+      precoVenda: '',
     });
-  }
-
-  onSubmit() {
-    console.log('wwwsunmittt') //validar
   }
 
   incluirProduto() {
     this.router.navigate(['cadastro'], { relativeTo: this.route })
   }
 
-  onEdit(produto: TProduto) {
-    this.router.navigate(['cadastro', produto.id], { relativeTo: this.route })
+  onFocusIn(campoFocado: string) {
+    const form = this.formulario.value
+
+    Object.keys(form).forEach((campoForm) => {
+      if (campoForm !== campoFocado && form[campoForm] !== '') {
+        this.formulario.patchValue({ [campoForm]: '' })
+      }
+    });
+  }
+
+  onFocusOut() {
+    this.gridConsulta.paginator.firstPage()
+    this.gridConsulta.atualizarGrid()
   }
 }

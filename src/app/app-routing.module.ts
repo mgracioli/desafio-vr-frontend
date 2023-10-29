@@ -1,10 +1,11 @@
-import { NgModule, inject } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { ConsultaProdutoComponent } from './produto/consulta/consulta-produto.component';
 import { PaginaNaoEncontradaComponent } from './pagina-nao-encontrada/pagina-nao-encontrada.component';
 import { ProdutosResolver } from './produto/guards/produtos.resolver';
-import { ProdutoResolver } from './produto/guards/produto.resolver';
 import { CadastroEdicaoProdutoComponent } from './produto/cadastro-edicao/cadastro-edicao-produto.component';
+import { ProdutoLojaResolver } from './produto/guards/produtoloja.resolver';
 
 const routes: Routes = [
   {
@@ -15,12 +16,11 @@ const routes: Routes = [
   {
     path: 'cadastro',
     component: CadastroEdicaoProdutoComponent,
-    resolve: { produtosLoja: ProdutoResolver }
   },
   {
     path: 'cadastro/:id',
     component: CadastroEdicaoProdutoComponent,
-    resolve: { produtosLoja: ProdutoResolver }
+    resolve: { produtosLoja: ProdutoLojaResolver }
   },
   {
     path: '**',

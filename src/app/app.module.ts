@@ -21,8 +21,20 @@ import { Utils } from './utils/sistema.utils';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { GridConsultaComponent } from './produto/consulta/grid-consulta/grid-consulta-produto.component';
+import { CurrencyMaskModule, CurrencyMaskConfig, CURRENCY_MASK_CONFIG } from "ng2-currency-mask";
 
 registerLocaleData(localePt);
+
+export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
+  align: "right",
+  allowNegative: false,
+  decimal: ",",
+  precision: 3,
+  prefix: "",
+  suffix: "",
+  thousands: ".",
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,12 +57,14 @@ registerLocaleData(localePt);
     MatSortModule,
     MatPaginatorModule,
     MatDialogModule,
-    ComponentsModule
+    ComponentsModule,
+    CurrencyMaskModule
   ],
   providers: [
     Utils,
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 4500, panelClass: ['snackbarstyle'] } },
-    { provide: LOCALE_ID, useValue: 'pt-BR' }
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
   ],
   bootstrap: [AppComponent]
 })

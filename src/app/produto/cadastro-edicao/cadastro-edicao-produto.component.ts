@@ -107,10 +107,18 @@ export class CadastroEdicaoProdutoComponent {
     if (objCadastro.descricao == '') {
       this.utils.exibeToast([{ codigo: '0.00', descricao: 'Não foi possível salvar: Um ou mais campos obrigatórios não foram preenchidos' }])
       return false
-    } else if (!objCadastro.lojas_preco.length) {
+    }
+
+    if (!objCadastro.lojas_preco.length) {
       this.utils.exibeToast([{ codigo: '0.00', descricao: 'Não foi possível salvar: Produto não vinculado a nenhuma loja' }])
       return false
     }
+
+    if (`${objCadastro.custo}`.length > 14) {
+      this.utils.exibeToast([{ codigo: '0.00', descricao: 'Valor de custo não pode ser maior que 9.999.999.999,99' }])
+      return false
+    }
+
     return true
   }
 

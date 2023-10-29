@@ -24,14 +24,13 @@
           <input [ngClass]="{erro: verificaValidTouched('descricao')}" id="descricao" type="text" class="form-control"
             formControlName="descricao">
 
-          <campo-erro [control]="formulario.get('descricao')" mensagem="Descrição" />
+          <campo-erro [control]="formulario.get('descricao')"
+            mensagem="Descrição precisa ter, no máximo, 60 caracteres" />
         </div>
 
         <div class="col-2">
           <label for="custo">Custo</label>
-          <input id="custo" formControlName="custo" class="form-control">
-          <!-- <input [value]="formulario.get('custo')?.value | number:'13.3-3':'pt-BR'" id="custo" formControlName="custo"
-            class="form-control">   -->
+          <input ngClass="ng-invalid" currencyMask id="custo" formControlName="custo" class="form-control">
         </div>
       </div>
     </form>

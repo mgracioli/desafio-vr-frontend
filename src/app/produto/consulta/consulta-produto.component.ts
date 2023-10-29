@@ -45,6 +45,11 @@ export class ConsultaProdutoComponent implements OnInit {
   }
 
   onFocusOut() {
+    const csto = this.formulario.get('custo')?.value
+    if (!csto || csto == 0) {
+      this.formulario.patchValue({ custo: '' })
+    }
+
     this.gridConsulta.paginator.firstPage()
     this.gridConsulta.atualizarGrid()
   }

@@ -75,6 +75,12 @@ export class ModalLojaPrecoComponent implements OnInit {
       this.utils.exibeToast([{ codigo: '0.00', descricao: 'Um ou mais campos obrigatórios não foram preenchidos corretamente.' }]);
     }
 
+    if (this.precoVenda.length > 14) {
+      this.utils.exibeToast([{ codigo: '0.00', descricao: 'Valor de custo não pode ser maior que 9.999.999.999,99' }])
+      return false
+    }
+
+
     return retorno
   }
 

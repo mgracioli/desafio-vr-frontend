@@ -47,6 +47,10 @@ export class ModalLojaPrecoComponent implements OnInit {
 
           this.idLojaDropDown = this.options[0].id
           this.nomeLojaDropDown = this.options[0].descricao
+        } else if (data.retorno.mensagens) {
+          this.utils.exibeToast(data.retorno.mensagens)
+        } else {
+          this.utils.exibeToast([{ codigo: '0.00', descricao: 'Erro ao buscar lista de lojas' }])
         }
       })
     }

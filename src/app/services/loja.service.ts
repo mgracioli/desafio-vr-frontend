@@ -20,7 +20,9 @@ export class LojaService {
     }
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   buscarLojas(): Observable<TRetornoApi<TLoja[]>> {
     return this.http.get<TRetornoApi<TLoja[]>>('/api/v1/loja').pipe(

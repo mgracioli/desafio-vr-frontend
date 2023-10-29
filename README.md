@@ -1,4 +1,4 @@
-#Desafio vr-software (front-end)
+# Desafio vr-software (front-end)
 
 - Iniciar a aplicação: npm run start (proxy)
 
@@ -6,7 +6,7 @@
 
 - foi criado um proxy para evitar problemas de CORS, o mesmo mapeia para a porta 8080 (a mesma do backend), caso seja alterada a porta no backend é necssário mudar, também, no arquivo proxy.cofig.json
 
-##O que foi realizado/o que não foi realizado
+## O que foi realizado/o que não foi realizado
 - [x] Angular
 - [x] Typescript
 - [ ] Testes

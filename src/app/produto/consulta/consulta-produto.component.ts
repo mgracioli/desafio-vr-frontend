@@ -26,7 +26,7 @@ export class ConsultaProdutoComponent implements OnInit {
       codigo: '',
       descricao: ['', [Validators.maxLength(60)]],
       custo: '',
-      precoVenda: '',
+      precoVenda: [{ value: '', disabled: true }],
     });
   }
 

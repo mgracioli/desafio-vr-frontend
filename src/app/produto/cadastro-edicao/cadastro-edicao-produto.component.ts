@@ -90,7 +90,7 @@ export class CadastroEdicaoProdutoComponent {
     }
 
     if (this.objetoValido(objCadastro)) {
-      this.produtoService.gravarProduto(objCadastro).subscribe(data => {
+      this.produtoService.gravarProduto(objCadastro).pipe(take(1)).subscribe(data => {
         if (data.retorno.codigo_status == 200) {
           this.utils.exibeToast([{ codigo: '0.00', descricao: 'Produto gravado com sucesso!' }])
           this.router.navigate(['']);
